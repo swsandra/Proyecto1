@@ -1,5 +1,0 @@
-4- Fork.pptx
-5- Pipe Signal.pptx
-clasedesosem07
-listaordenada.c
-ProyectoOperativos

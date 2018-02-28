@@ -49,23 +49,20 @@ int main(){
 		pid_t pid_hijo;
 		pid_hijo=fork();
 		FILE *archivo_pipe;
-		int status,count;
-		count=0;
-		if(pid_hijo==0){
-			//printf("Entro if hijo\n");
-			
+		int status;
+		int count=0;
+		if(pid_hijo==0){			
 			DIR *directorio = opendir(archivo);
 			struct dirent *dp; //Para el directorio
 			char *nombre_archivo;
 			close(fd[0]);
         	dup2(fd[1], STDIN_FILENO);
 			while(((dp=readdir(directorio))!=NULL)){
-				if ( !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ){}
+				if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..")){}
 				else{
 					nombre_archivo = dp->d_name;
 					//Lo escribe al pipe
 					write(fd[1],nombre_archivo,100);
-					count++;
 				}
 			}
 			closedir(directorio);
@@ -74,12 +71,12 @@ int main(){
 			//el padre espera y luego imprime el output
 			waitpid(pid_hijo, &status,0);
 			close(fd[1]);
-			if(count>0){
 				while(read(fd[0],buf,100)>0){
 					printf("%s\n", buf);
+					count++;
 				}
-			}
 			close(fd[0]);
+			printf("%d\n", count);
 		}
 	}else if(S_ISREG(modo)==1){
 		printf("Es un archivo regular.\n");
